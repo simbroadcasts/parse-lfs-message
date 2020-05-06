@@ -22,7 +22,7 @@ You can run the example with `yarn example` or `npm run example`.
 
 ```javascript
 // Require parse-lfs-message module
-const parseLFSMessage = require("../dist");
+const parseLFSMessage = require("parse-lfs-message");
 
 // Simulate receiving messages from a buffer
 const msg1 = Buffer.from("^72^45 ^7B2^J^4Ï^1 Ayoub", "binary");
