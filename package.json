@@ -1,0 +1,22 @@
+{
+  "name": "parse-lfs-message",
+  "version": "1.0.0",
+  "description": "Convert LFS Message to UTF-8",
+  "source": "src/index.js",
+  "main": "dist/index.js",
+  "repository": "git@github.com:simbroadcasts/parse-lfs-message.git",
+  "author": "pbutcher <pbutcher93@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch",
+    "example": "node example"
+  },
+  "dependencies": {
+    "iconv": "^3.0.0"
+  },
+  "devDependencies": {
+    "microbundle": "^0.11.0"
+  }
+}
