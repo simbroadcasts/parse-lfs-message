@@ -11,12 +11,17 @@
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
-    "example": "node example"
+    "example": "node example",
+    "test": "jest"
   },
   "dependencies": {
     "iconv": "^3.0.0"
   },
   "devDependencies": {
+    "jest": "^26.6.3",
     "microbundle": "^0.11.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
