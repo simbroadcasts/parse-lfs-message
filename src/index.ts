@@ -1,6 +1,6 @@
-const Iconv = require("iconv").Iconv;
+import { Iconv } from "iconv";
 
-const codepages = {
+const codepages: Record<string, string> = {
   "^L": "CP1252",
   "^G": "CP1253",
   "^C": "CP1251",
@@ -14,7 +14,7 @@ const codepages = {
   "^8": "CP1252",
 };
 
-const specials = {
+const specials: Record<string, string> = {
   "^v": "|",
   "^a": "*",
   "^c": ":",
@@ -28,7 +28,7 @@ const specials = {
   "^^": "^",
 };
 
-const isMultiByte = (cp, c) => {
+const isMultiByte = (cp: string, c: number) => {
   switch (cp) {
     case "^L":
     case "^8":
@@ -49,7 +49,7 @@ const isMultiByte = (cp, c) => {
   }
 };
 
-function parseLFSMessage(msg) {
+function parseLFSMessage(msg: Buffer | string): string {
   let buffer = Buffer.from(msg);
 
   // Default codepage: Latin 1
@@ -112,4 +112,4 @@ function parseLFSMessage(msg) {
   return resultString;
 }
 
-module.exports = parseLFSMessage;
+export default parseLFSMessage;

@@ -1,9 +1,9 @@
-const parseLFSMessage = require("../index");
+import parseLFSMessage from "../index";
 
 const asciiStart = 32,
   asciiEnd = 126;
 const asciiCharacters = Array(asciiEnd - asciiStart + 1)
-  .fill()
+  .fill(null)
   .map((_, index) => index + asciiStart);
 
 describe("parseLFSMessage", () => {
