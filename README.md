@@ -1,6 +1,6 @@
 # parse-lfs-message
 
-[![NPM Version](https://img.shields.io/npm/v/parse-lfs-message?style=flat-square)](https://www.npmjs.com/package/parse-lfs-message)
+[![NPM Version](https://img.shields.io/npm/v/parse-lfs-message?style=flat-square)](https://www.npmjs.com/package/parse-lfs-message) ![Node.js CI](https://github.com/simbroadcasts/parse-lfs-message/actions/workflows/.github/workflows/node.js.yml/badge.svg)
 
 Convert a [Live for Speed](https://lfs.net) message to UTF-8
 
