@@ -28,7 +28,7 @@ const specials: Record<string, string> = {
   "^^": "^",
 };
 
-const isMultiByte = (cp: string, c: number) => {
+const isMultiByte = (cp: string, c: number): boolean => {
   switch (cp) {
     case "^L":
     case "^8":
