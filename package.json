@@ -15,6 +15,9 @@
   "typings": "dist/index.d.ts",
   "repository": "git@github.com:simbroadcasts/parse-lfs-message.git",
   "author": "pbutcher <pbutcher93@gmail.com>",
+  "contributors": [
+    "Martin Kapal <flamecze@gmail.com>"
+  ],
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -27,11 +30,13 @@
     "format:no-write": "prettier \"./**/*.{js,ts,md,json}\"",
     "format:check": "run-s \"format:no-write --check\"",
     "test": "jest",
-    "example": "node example/index.js"
+    "example": "node example/index.js",
+    "bump": "node scripts/bump.js"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "@types/node": "^18.13.0",
+    "chalk": "^5.2.0",
     "esbuild": "^0.17.13",
     "jest": "^29.4.2",
     "jest-junit": "^15.0.0",
@@ -39,6 +44,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.4",
     "rimraf": "^4.4.1",
+    "semver": "^7.3.8",
     "ts-jest": "^29.0.5",
     "tsx": "^3.12.6",
     "typescript": "^4.9.5"
