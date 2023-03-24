@@ -5,7 +5,7 @@ describe("CP1250", () => {
   it("should convert Latin 1 (CP1252) as the default codepage", () => {
     expect(
       parseLFSMessage(
-        Buffer.from([
+        new Uint8Array([
           ...asciiCharacters,
           // 127 [DEL] not available in LFS
           128,
@@ -146,7 +146,7 @@ describe("CP1250", () => {
   it("should convert Latin 1 (CP1252) using ^L control character", () => {
     expect(
       parseLFSMessage(
-        Buffer.from([
+        new Uint8Array([
           94, // ^
           76, // L
           ...asciiCharacters,

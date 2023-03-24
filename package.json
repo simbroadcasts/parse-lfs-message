@@ -26,11 +26,7 @@
     "test": "jest",
     "example": "node example/index.js"
   },
-  "dependencies": {
-    "iconv": "^3.0.0"
-  },
   "devDependencies": {
-    "@types/iconv": "^3.0.1",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.13.0",
     "jest": "^29.4.2",

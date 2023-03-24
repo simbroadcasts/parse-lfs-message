@@ -5,7 +5,7 @@ describe("CP1250", () => {
   it("should convert Central Europe (CP1250) using ^E control character", () => {
     expect(
       parseLFSMessage(
-        Buffer.from([
+        new Uint8Array([
           94, // ^
           69, // E
           ...asciiCharacters,
