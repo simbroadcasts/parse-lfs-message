@@ -1,3 +1,2 @@
-/// <reference types="node" />
-declare function parseLFSMessage(msg: Buffer | string): string;
+declare function parseLFSMessage(msg: Uint8Array | string): string;
 export default parseLFSMessage;
