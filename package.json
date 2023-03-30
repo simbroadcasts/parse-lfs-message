@@ -1,6 +1,6 @@
 {
   "name": "parse-lfs-message",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Convert LFS Message to UTF-8",
   "source": "src/index.ts",
   "type": "module",
