@@ -1,5 +1,5 @@
 // Import parse-lfs-message module
-import parseLFSMessage from "../dist/index.esm.js";
+const parseLFSMessage = require("../dist/index.cjs");
 
 // Simulate receiving messages from a buffer
 const msg1 = Buffer.from("^72^45 ^7B2^J^4Ï^1 Ayoub", "binary");
