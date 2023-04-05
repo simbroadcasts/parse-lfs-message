@@ -79,15 +79,16 @@ function parseLFSMessage(msg: Uint8Array | string): string {
       // Found '^'
       let cpCheck = `^${iconvCurrent.decode(buffer.slice(i + 1, i + 2))}`;
       if (codepages.hasOwnProperty(cpCheck)) {
-        // Changing codepage
-        currentCodepage = cpCheck;
-        iconvCurrent = new TextDecoder(codepages[currentCodepage]);
         if (blockStart < blockEnd) {
           // Convert current block if it has data
           resultString += iconvCurrent.decode(
             buffer.slice(blockStart, blockEnd)
           );
         }
+        // Changing codepage
+        currentCodepage = cpCheck;
+        iconvCurrent = new TextDecoder(codepages[currentCodepage]);
+
         // Start a new block
         if (buffer[i + 1] === 0x38) {
           blockStart = i;
