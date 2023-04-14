@@ -23,7 +23,6 @@ const specials: Record<string, string> = {
   "^l": "<",
   "^r": ">",
   "^h": "#",
-  "^^": "^",
 };
 
 const isMultiByte = (cp: string, c: number): boolean => {
@@ -108,9 +107,12 @@ function parseLFSMessage(msg: Uint8Array | string): string {
     }
   }
 
-  for (let i in specials) {
-    resultString = resultString.split(i).join(specials[i]);
+  for (let special in specials) {
+    const regExp = new RegExp(`(?<!\\^)\\${special}`, "g");
+    resultString = resultString.replaceAll(regExp, specials[special]);
   }
+
+  resultString = resultString.replaceAll("^^", "^");
 
   return resultString;
 }
