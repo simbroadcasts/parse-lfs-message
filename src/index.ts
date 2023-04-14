@@ -109,10 +109,10 @@ function parseLFSMessage(msg: Uint8Array | string): string {
 
   for (let special in specials) {
     const regExp = new RegExp(`(?<!\\^)\\${special}`, "g");
-    resultString = resultString.replaceAll(regExp, specials[special]);
+    resultString = resultString.split(regExp).join(specials[special]);
   }
 
-  resultString = resultString.replaceAll("^^", "^");
+  resultString = resultString.split("^^").join("^");
 
   return resultString;
 }
