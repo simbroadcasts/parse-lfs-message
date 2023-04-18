@@ -134,7 +134,7 @@ const characters = {
   255: "ÿ",
 };
 
-describe("CP1250", () => {
+describe("CP1252", () => {
   it("should convert Latin 1 (CP1252) as the default codepage", () => {
     expect(
       parseLFSMessage(
