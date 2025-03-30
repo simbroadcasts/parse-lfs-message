@@ -1,16 +1,37 @@
 const controlChar = "^";
 
 const codepages = {
+  /** Default codepage */
   "8": "CP1252",
+
+  /** Latin 1 */
   L: "CP1252",
+
+  /** Greek */
   G: "CP1253",
+
+  /** Cyrillic */
   C: "CP1251",
+
+  /** Central Europe */
   E: "CP1250",
+
+  /** Turkish */
   T: "CP1254",
+
+  /** Baltic */
   B: "CP1257",
+
+  /** Japanese */
   J: "shift-jis",
+
+  /** Traditional Chinese */
   H: "big5",
+
+  /** Simplified Chinese */
   S: "gbk",
+
+  /** Korean */
   K: "euc-kr",
 } as const;
 
