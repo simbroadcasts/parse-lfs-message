@@ -112,8 +112,6 @@ function parseLFSMessage(msg: Uint8Array | string): string {
     resultString = resultString.split(regExp).join(specials[special]);
   }
 
-  resultString = resultString.split("^^").join("^");
-
   return resultString;
 }
 
