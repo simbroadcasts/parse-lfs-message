@@ -47,13 +47,10 @@ const isMultiByte = (cp: string, c: number): boolean => {
 };
 
 function parseLFSMessage(msg: Uint8Array | string): string {
-  let buffer: Uint8Array;
-
-  if (typeof msg === "string") {
-    buffer = new Uint8Array(msg.split("").map((char) => char.charCodeAt(0)));
-  } else {
-    buffer = msg;
-  }
+  const buffer =
+    typeof msg === "string"
+      ? new Uint8Array([...msg].map((c) => c.charCodeAt(0)))
+      : msg;
 
   // Default codepage: Latin 1
   let currentCodepage = "^L";
