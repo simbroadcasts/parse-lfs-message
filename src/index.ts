@@ -2,7 +2,7 @@ const controlChar = "^";
 
 const codepages = {
   /** Default codepage */
-  "8": "CP1252",
+  "9": "CP1252",
 
   /** Latin 1 */
   L: "CP1252",
@@ -54,7 +54,7 @@ const specials: Record<string, string> = {
 const isMultiByte = (codepage: Codepage, character: number): boolean => {
   switch (codepage) {
     case "L":
-    case "8":
+    case "9":
     case "G":
     case "C":
     case "E":
