@@ -13,7 +13,10 @@
   },
   "main": "dist/index.cjs",
   "typings": "dist/index.d.ts",
-  "repository": "git@github.com:simbroadcasts/parse-lfs-message.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/simbroadcasts/parse-lfs-message.git"
+  },
   "author": "pbutcher <pbutcher93@gmail.com>",
   "contributors": [
     "Martin Kapal <flamecze@gmail.com>"
