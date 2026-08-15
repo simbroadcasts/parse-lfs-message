@@ -67,4 +67,34 @@ describe("special characters", () => {
     expect(parseLFSMessage("^^K")).toEqual("^^K");
     expect(parseLFSMessage("^^J\xCF")).toEqual("^^J\xCF");
   });
+
+  it("should not drop preceding text when flushing before a special character", () => {
+    expect(parseLFSMessage("ab^v")).toEqual("ab|");
+
+    const bytes = new Uint8Array([
+      97,
+      98,
+      99,
+      32, // "abc "
+      94,
+      69, // ^E -> switch to CP1250
+      236,
+      154,
+      232, // "ěšč" in CP1250
+      124,
+      42,
+      58,
+      92,
+      47,
+      63,
+      34,
+      60,
+      62,
+      35, // literal |*:\/?"<>#
+      94,
+      94, // ^^ (stays literal)
+      0,
+    ]);
+    expect(parseLFSMessage(bytes)).toEqual('abc ěšč|*:\\/?"<>#^^');
+  });
 });

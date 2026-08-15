@@ -88,6 +88,12 @@ function parseLFSMessage(msg: Uint8Array | string): string {
         blockEnd = i + 2;
         i++;
       } else if (specials.hasOwnProperty(cpCheck)) {
+        if (blockStart < blockEnd) {
+          // Convert current block if it has data
+          resultString += iconvCurrent.decode(
+            buffer.slice(blockStart, blockEnd),
+          );
+        }
         resultString += specials[cpCheck];
 
         // Start a new block
