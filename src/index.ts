@@ -1,41 +1,6 @@
+import { Codepage, codepages, createDecoder, Decoder } from "./decoder";
+
 const controlChar = "^";
-
-const codepages = {
-  /** Default codepage */
-  "8": "CP1252",
-
-  /** Latin 1 */
-  L: "CP1252",
-
-  /** Greek */
-  G: "CP1253",
-
-  /** Cyrillic */
-  C: "CP1251",
-
-  /** Central Europe */
-  E: "CP1250",
-
-  /** Turkish */
-  T: "CP1254",
-
-  /** Baltic */
-  B: "CP1257",
-
-  /** Japanese */
-  J: "shift-jis",
-
-  /** Traditional Chinese */
-  H: "big5",
-
-  /** Simplified Chinese */
-  S: "gbk",
-
-  /** Korean */
-  K: "euc-kr",
-} as const;
-
-type Codepage = keyof typeof codepages;
 
 const specials: Record<string, string> = {
   v: "|",
@@ -86,7 +51,7 @@ function parseLFSMessage(msg: Uint8Array | string): string {
   let resultString = "";
   let blockStart = 0;
   let blockEnd = 0;
-  let iconvCurrent = new TextDecoder(codepages[currentCodepage]);
+  let iconvCurrent: Decoder = createDecoder(currentCodepage);
 
   for (let i = 0; i <= buffer.length; i++) {
     if (i === buffer.length || buffer[i] === 0) {
@@ -112,7 +77,7 @@ function parseLFSMessage(msg: Uint8Array | string): string {
         }
         // Changing codepage
         currentCodepage = cpCheck;
-        iconvCurrent = new TextDecoder(codepages[currentCodepage]);
+        iconvCurrent = createDecoder(currentCodepage);
 
         // Start a new block
         if (buffer[i + 1] === 0x38) {
