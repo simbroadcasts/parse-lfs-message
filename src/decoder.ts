@@ -122,6 +122,38 @@ const decodeShiftJIS = (bytes: Uint8Array): string => {
   return result;
 };
 
+/**
+ * Node's native TextDecoder("big5") has no mapping for single byte 0x80:
+ * LFS displays it as € (matching every other codepage), but the decoder
+ * returns U+0080 unchanged. Override just that byte when it appears outside
+ * a 2-byte lead/trail pair — 0x80 never appears as a legitimate Big5 trail
+ * byte, so genuine 2-byte Traditional Chinese characters are unaffected.
+ */
+const big5SingleByteOverrides: Record<number, string> = {
+  0x80: "€",
+};
+
+const isBig5LeadByte = (byte: number): boolean => byte > 0x80 && byte < 0xff;
+
+const decodeBig5 = (bytes: Uint8Array): string => {
+  const textDecoder = new TextDecoder("big5");
+  let result = "";
+
+  for (let i = 0; i < bytes.length; i++) {
+    const byte = bytes[i];
+
+    if (isBig5LeadByte(byte) && i + 1 < bytes.length) {
+      result += textDecoder.decode(bytes.slice(i, i + 2));
+      i++;
+    } else {
+      result +=
+        big5SingleByteOverrides[byte] ?? textDecoder.decode(bytes.slice(i, i + 1));
+    }
+  }
+
+  return result;
+};
+
 export const createDecoder = (codepage: Codepage): Decoder => {
   const encoding = codepages[codepage];
 
@@ -131,6 +163,10 @@ export const createDecoder = (codepage: Codepage): Decoder => {
 
   if (encoding === "shift-jis") {
     return { decode: decodeShiftJIS };
+  }
+
+  if (encoding === "big5") {
+    return { decode: decodeBig5 };
   }
 
   return new TextDecoder(encoding);
