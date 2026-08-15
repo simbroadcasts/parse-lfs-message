@@ -85,11 +85,52 @@ const decodeCP1252 = (bytes: Uint8Array): string => {
   return result;
 };
 
+/**
+ * Node's native TextDecoder("shift-jis") has no mapping for single bytes
+ * 0x5C and 0x80: LFS displays these as ¥ and € (JIS X 0201 Roman convention
+ * plus LFS's own Euro sign addition, matching every other codepage), but the
+ * decoder returns a plain backslash for 0x5C and U+FFFD for 0x80. Override
+ * just those two bytes when they appear outside a 2-byte lead/trail pair, so
+ * genuine Kanji sequences that happen to contain those byte values as their
+ * trail byte are left untouched.
+ */
+const shiftJISSingleByteOverrides: Record<number, string> = {
+  0x5c: "¥",
+  0x80: "€",
+};
+
+const isShiftJISLeadByte = (byte: number): boolean =>
+  (byte > 0x80 && byte < 0xa0) || (byte >= 0xe0 && byte < 0xfd);
+
+const decodeShiftJIS = (bytes: Uint8Array): string => {
+  const textDecoder = new TextDecoder("shift-jis");
+  let result = "";
+
+  for (let i = 0; i < bytes.length; i++) {
+    const byte = bytes[i];
+
+    if (isShiftJISLeadByte(byte) && i + 1 < bytes.length) {
+      result += textDecoder.decode(bytes.slice(i, i + 2));
+      i++;
+    } else {
+      result +=
+        shiftJISSingleByteOverrides[byte] ??
+        textDecoder.decode(bytes.slice(i, i + 1));
+    }
+  }
+
+  return result;
+};
+
 export const createDecoder = (codepage: Codepage): Decoder => {
   const encoding = codepages[codepage];
 
   if (encoding === "CP1252") {
     return { decode: decodeCP1252 };
+  }
+
+  if (encoding === "shift-jis") {
+    return { decode: decodeShiftJIS };
   }
 
   return new TextDecoder(encoding);
