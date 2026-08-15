@@ -72,7 +72,7 @@ function parseLFSMessage(msg: Uint8Array | string): string {
         if (blockStart < blockEnd) {
           // Convert current block if it has data
           resultString += iconvCurrent.decode(
-            buffer.slice(blockStart, blockEnd)
+            buffer.slice(blockStart, blockEnd),
           );
         }
         // Changing codepage

@@ -61,7 +61,7 @@ execSyncAndLog(`git diff --cached --color`, "This diff will be committed:");
 const currentBranchReleaseWarning = () => {
   if (currentBranch !== `refs/heads/${mainBranch}`) {
     return chalk.yellow(
-      `🚨Are you sure that you want to release from a non-main branch?🚨 The main branch is ${mainBranch}.`
+      `🚨Are you sure that you want to release from a non-main branch?🚨 The main branch is ${mainBranch}.`,
     );
   }
 
@@ -87,8 +87,8 @@ Be sure you have the latest version of your branch.`)}
     execSyncAndLog(`git push origin "${tag}"`);
 
     console.log(
-      chalk.green(`✅> All done! ${projectDirectory} bumped to ${version}.`)
+      chalk.green(`✅> All done! ${projectDirectory} bumped to ${version}.`),
     );
     process.exit(0);
-  }
+  },
 );

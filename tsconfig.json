@@ -4,14 +4,15 @@
     "outDir": "./dist",
     "strict": true,
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "ESNext",
     "module": "ESNext",
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "baseUrl": ".",
     "esModuleInterop": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "types": ["jest", "node"],
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/**/__tests__"]

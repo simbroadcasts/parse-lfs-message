@@ -138,8 +138,8 @@ describe("CP1252", () => {
   it("should convert Latin 1 (CP1252) as the default codepage", () => {
     expect(
       parseLFSMessage(
-        new Uint8Array(Object.keys(characters).map((key) => Number(key)))
-      )
+        new Uint8Array(Object.keys(characters).map((key) => Number(key))),
+      ),
     ).toEqual(Array.from(Object.values(characters)).join(""));
   });
 
@@ -150,8 +150,8 @@ describe("CP1252", () => {
           94, // ^
           76, // L
           ...Object.keys(characters).map((key) => Number(key)),
-        ])
-      )
+        ]),
+      ),
     ).toEqual(Object.values(characters).join(""));
   });
 });

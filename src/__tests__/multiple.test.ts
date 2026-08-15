@@ -14,8 +14,8 @@ describe("multiple encodings within a string", () => {
           94, // ^
           76, // L
           248,
-        ])
-      )
+        ]),
+      ),
     ).toEqual("řшø");
   });
 });

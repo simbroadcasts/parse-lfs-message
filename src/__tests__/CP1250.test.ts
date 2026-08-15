@@ -142,8 +142,8 @@ describe("CP1250", () => {
           94, // ^
           69, // E
           ...Object.keys(characters).map((key) => Number(key)),
-        ])
-      )
+        ]),
+      ),
     ).toEqual(Object.values(characters).join(""));
   });
 });
