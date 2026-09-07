@@ -1,4 +1,4 @@
-import { Codepage, codepages, createDecoder, Decoder } from "./decoder";
+import { Codepage, createDecoder, Decoder, isValidCodepage } from "./decoder";
 
 const controlChar = "^";
 
@@ -117,10 +117,6 @@ function parseLFSMessage(msg: Uint8Array | string): string {
   }
 
   return resultString;
-}
-
-function isValidCodepage(codepage: string): codepage is Codepage {
-  return codepages.hasOwnProperty(codepage);
 }
 
 export default parseLFSMessage;

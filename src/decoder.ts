@@ -40,6 +40,10 @@ export const codepages = {
 
 export type Codepage = keyof typeof codepages;
 
+export function isValidCodepage(codepage: string): codepage is Codepage {
+  return codepages.hasOwnProperty(codepage);
+}
+
 export interface Decoder {
   decode(bytes: Uint8Array): string;
 }
