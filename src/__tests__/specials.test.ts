@@ -97,4 +97,44 @@ describe("special characters", () => {
     ]);
     expect(parseLFSMessage(bytes)).toEqual('abc ěšč|*:\\/?"<>#^^');
   });
+
+  describe("default codepage with ^8", () => {
+    it("should convert Latin 1 (CP1252) after ^8 control character by default", () => {
+      expect(
+        parseLFSMessage(
+          new Uint8Array([
+            94, // ^
+            74, // J
+            177,
+            178,
+            94, // ^
+            56, // 8
+            253, // ý
+            254, // þ
+          ]),
+        ),
+      ).toEqual("ｱｲ^9ýþ");
+    });
+
+    it("should convert to the provided `defaultCodepage` after ^8 control character", () => {
+      expect(
+        parseLFSMessage(
+          new Uint8Array([
+            94, // ^
+            74, // J
+            177,
+            178,
+            94, // ^
+            56, // 8
+            236, // ě
+            154, // š
+            232, // č
+          ]),
+          {
+            originalCodepage: "E",
+          },
+        ),
+      ).toEqual("ｱｲ^9ěšč");
+    });
+  });
 });

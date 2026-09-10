@@ -1,6 +1,7 @@
 import { Codepage, createDecoder, Decoder, isValidCodepage } from "./decoder";
 
-const controlChar = "^";
+const CONTROL_CHAR = "^";
+const RESET_COLOUR_AND_CODEPAGE_CHAR = "8";
 
 const specials: Record<string, string> = {
   v: "|",
@@ -40,14 +41,33 @@ const isMultiByte = (codepage: Codepage, character: number): boolean => {
   }
 };
 
-function parseLFSMessage(msg: Uint8Array | string): string {
+type OriginalCodepage = Exclude<Codepage, "8">;
+
+function parseLFSMessage(
+  msg: Uint8Array | string,
+  options: {
+    /**
+     * The code page to convert characters from after an `^8` escape code,
+     * which means "return to original colour and code page". For client-side
+     * LFS messages, the original code page is the selected translation's code page.
+     *
+     * To get the code page of LFS output messages, read the `MSOData` property
+     * in the `IS_MSO` packet.
+     *
+     * If this option is not provided, the default value is Latin-1 (CP1252).
+     */
+    originalCodepage?: OriginalCodepage;
+  } = {},
+): string {
+  const { originalCodepage = "L" } = options;
+
   const buffer =
     typeof msg === "string"
       ? new Uint8Array([...msg].map((c) => c.charCodeAt(0)))
       : msg;
 
-  // Default codepage: Latin 1
-  let currentCodepage: Codepage = "L";
+  // Default codepage: Latin 1, unless provided from outside
+  let currentCodepage: Codepage = originalCodepage;
   let resultString = "";
   let blockStart = 0;
   let blockEnd = 0;
@@ -65,10 +85,13 @@ function parseLFSMessage(msg: Uint8Array | string): string {
       // Skip multi-byte char
       blockEnd += 2;
       i++;
-    } else if (buffer[i] === controlChar.charCodeAt(0)) {
+    } else if (buffer[i] === CONTROL_CHAR.charCodeAt(0)) {
       // Found '^'
       let cpCheck = iconvCurrent.decode(buffer.slice(i + 1, i + 2));
-      if (isValidCodepage(cpCheck)) {
+      const isResetColourAndCodepage =
+        cpCheck === RESET_COLOUR_AND_CODEPAGE_CHAR;
+
+      if (isValidCodepage(cpCheck) || isResetColourAndCodepage) {
         if (blockStart < blockEnd) {
           // Convert current block if it has data
           resultString += iconvCurrent.decode(
@@ -76,11 +99,11 @@ function parseLFSMessage(msg: Uint8Array | string): string {
           );
         }
         // Changing codepage
-        currentCodepage = cpCheck;
+        currentCodepage = isResetColourAndCodepage ? originalCodepage : cpCheck;
         iconvCurrent = createDecoder(currentCodepage);
 
         // Start a new block
-        if (buffer[i + 1] === 0x38) {
+        if (buffer[i + 1] === RESET_COLOUR_AND_CODEPAGE_CHAR.charCodeAt(0)) {
           blockStart = i;
         } else {
           blockStart = i + 2;
@@ -97,7 +120,7 @@ function parseLFSMessage(msg: Uint8Array | string): string {
         resultString += specials[cpCheck];
 
         // Start a new block
-        if (buffer[i + 1] === 0x38) {
+        if (buffer[i + 1] === RESET_COLOUR_AND_CODEPAGE_CHAR.charCodeAt(0)) {
           blockStart = i;
         } else {
           blockStart = i + 2;
@@ -118,5 +141,7 @@ function parseLFSMessage(msg: Uint8Array | string): string {
 
   return resultString;
 }
+
+export { Codepage, OriginalCodepage };
 
 export default parseLFSMessage;
