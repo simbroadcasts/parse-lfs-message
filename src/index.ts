@@ -2,6 +2,7 @@ import { Codepage, createDecoder, Decoder, isValidCodepage } from "./decoder";
 
 const CONTROL_CHAR = "^";
 const RESET_COLOUR_AND_CODEPAGE_CHAR = "8";
+const CODEPAGE_WAS_RESET_CHAR = "9";
 
 const specials: Record<string, string> = {
   v: "|",
@@ -102,12 +103,14 @@ function parseLFSMessage(
         currentCodepage = isResetColourAndCodepage ? originalCodepage : cpCheck;
         iconvCurrent = createDecoder(currentCodepage);
 
-        // Start a new block
-        if (buffer[i + 1] === RESET_COLOUR_AND_CODEPAGE_CHAR.charCodeAt(0)) {
-          blockStart = i;
-        } else {
-          blockStart = i + 2;
+        // `^8` and `^9` render as the same colour, so `^8` always renders as
+        // `^9` in the output.
+        if (isResetColourAndCodepage) {
+          resultString += CONTROL_CHAR + CODEPAGE_WAS_RESET_CHAR;
         }
+
+        // Start a new block
+        blockStart = i + 2;
         blockEnd = i + 2;
         i++;
       } else if (specials.hasOwnProperty(cpCheck)) {
