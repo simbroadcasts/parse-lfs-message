@@ -43,6 +43,8 @@ console.log(parsedMsg2);
 
 `parseLFSMessage` accepts an optional second argument.
 
+LFS messages can also contain an `^:` control character, meaning "return to original colour and Latin-1 code page". Unlike `^8`, `^:` always switches back to Latin-1 (CP1252), regardless of the `originalCodepage` option. `^:` is always rendered as `^9` in the output.
+
 ### `originalCodepage`
 
 LFS messages can contain an `^8` control character, meaning "return to original colour and code page". The `originalCodepage` option tells the parser which code page to switch back to when it encounters `^8`. In the output, `^8` is always rendered as `^9`, since they render as the same colour in LFS.

@@ -2,7 +2,8 @@ import { Codepage, createDecoder, Decoder, isValidCodepage } from "./decoder";
 
 const CONTROL_CHAR = "^";
 const RESET_COLOUR_AND_CODEPAGE_CHAR = "8";
-const CODEPAGE_WAS_RESET_CHAR = "9";
+const RESET_COLOUR_AND_LATIN1_CODEPAGE_CHAR = ":";
+const RESET_COLOUR_CHAR = "9";
 
 const specials: Record<string, string> = {
   v: "|",
@@ -21,7 +22,6 @@ const specials: Record<string, string> = {
 const isMultiByte = (codepage: Codepage, character: number): boolean => {
   switch (codepage) {
     case "L":
-    case "8":
     case "G":
     case "C":
     case "E":
@@ -42,8 +42,6 @@ const isMultiByte = (codepage: Codepage, character: number): boolean => {
   }
 };
 
-type OriginalCodepage = Exclude<Codepage, "8">;
-
 function parseLFSMessage(
   msg: Uint8Array | string,
   options: {
@@ -57,7 +55,7 @@ function parseLFSMessage(
      *
      * If this option is not provided, the default value is Latin-1 (CP1252).
      */
-    originalCodepage?: OriginalCodepage;
+    originalCodepage?: Codepage;
   } = {},
 ): string {
   const { originalCodepage = "L" } = options;
@@ -91,8 +89,14 @@ function parseLFSMessage(
       let cpCheck = iconvCurrent.decode(buffer.slice(i + 1, i + 2));
       const isResetColourAndCodepage =
         cpCheck === RESET_COLOUR_AND_CODEPAGE_CHAR;
+      const isResetColourAndLatin1Codepage =
+        cpCheck === RESET_COLOUR_AND_LATIN1_CODEPAGE_CHAR;
 
-      if (isValidCodepage(cpCheck) || isResetColourAndCodepage) {
+      if (
+        isValidCodepage(cpCheck) ||
+        isResetColourAndCodepage ||
+        isResetColourAndLatin1Codepage
+      ) {
         if (blockStart < blockEnd) {
           // Convert current block if it has data
           resultString += iconvCurrent.decode(
@@ -100,13 +104,17 @@ function parseLFSMessage(
           );
         }
         // Changing codepage
-        currentCodepage = isResetColourAndCodepage ? originalCodepage : cpCheck;
+        currentCodepage = isResetColourAndCodepage
+          ? originalCodepage
+          : isResetColourAndLatin1Codepage
+            ? "L"
+            : cpCheck;
         iconvCurrent = createDecoder(currentCodepage);
 
-        // `^8` and `^9` render as the same colour, so `^8` always renders as
-        // `^9` in the output.
-        if (isResetColourAndCodepage) {
-          resultString += CONTROL_CHAR + CODEPAGE_WAS_RESET_CHAR;
+        // `^8`, `^:` and `^9` all render as the same colour, so `^8` and `^:`
+        // always render as `^9` in the output.
+        if (isResetColourAndCodepage || isResetColourAndLatin1Codepage) {
+          resultString += CONTROL_CHAR + RESET_COLOUR_CHAR;
         }
 
         // Start a new block
@@ -145,6 +153,6 @@ function parseLFSMessage(
   return resultString;
 }
 
-export { Codepage, OriginalCodepage };
+export { Codepage };
 
 export default parseLFSMessage;

@@ -4,9 +4,6 @@ import { decodeBig5 } from "./decoders/big5";
 import { decodeEucKr } from "./decoders/euc-kr";
 
 export const codepages = {
-  /** Default codepage */
-  "8": "CP1252",
-
   /** Latin 1 */
   L: "CP1252",
 

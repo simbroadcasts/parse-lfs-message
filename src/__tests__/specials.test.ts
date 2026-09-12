@@ -98,7 +98,7 @@ describe("special characters", () => {
     expect(parseLFSMessage(bytes)).toEqual('abc ěšč|*:\\/?"<>#^^');
   });
 
-  describe("default codepage with ^8", () => {
+  describe("default colour and codepage with ^8", () => {
     it("should convert Latin 1 (CP1252) after ^8 control character by default and output ^9 instead", () => {
       expect(
         parseLFSMessage(
@@ -135,6 +135,27 @@ describe("special characters", () => {
           },
         ),
       ).toEqual("ｱｲ^9ěšč");
+    });
+  });
+
+  describe("default colour and Latin-1 codepage with ^:", () => {
+    it("should convert Latin-1 (CP1252) after ^: control character and output ^9 instead", () => {
+      expect(
+        parseLFSMessage(
+          new Uint8Array([
+            94, // ^
+            49, // 1
+            94, // ^
+            74, // J
+            177,
+            178,
+            94, // ^
+            58, // :
+            253, // ý
+            254, // þ
+          ]),
+        ),
+      ).toEqual("^1ｱｲ^9ýþ");
     });
   });
 });
