@@ -31,10 +31,11 @@
     "dev": "tsx watch src/index.ts",
     "format": "run-s \"format:no-write --write\"",
     "format:no-write": "prettier \"./**/*.{js,ts,md,json}\"",
-    "format:check": "run-s \"format:no-write --check\"",
+    "format:check": "run-s \"format:no-write -- --check\"",
     "test": "jest",
     "example": "node example/index.js",
-    "bump": "node scripts/bump.js"
+    "bump": "node scripts/bump.js",
+    "prepublishOnly": "run-s \"format:check\" build \"test --watch=false\""
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
