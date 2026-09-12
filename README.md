@@ -38,3 +38,34 @@ console.log(parsedMsg1);
 console.log(parsedMsg2);
 // Output: ^405 ｢^7ﾏｧ^4｣ ^7TJ
 ```
+
+## Options
+
+`parseLFSMessage` accepts an optional second argument.
+
+### `originalCodepage`
+
+LFS messages can contain an `^8` control character, meaning "return to original colour and code page". The `originalCodepage` option tells the parser which code page to switch back to when it encounters `^8`. In the output, `^8` is always rendered as `^9`, since they render as the same colour in LFS.
+
+If not provided, it defaults to Latin-1 (`"L"`).
+
+For LFS output messages, the original code page can be read from the `MSOData` property of the `IS_MSO` packet.
+
+```javascript
+const parsedMsg = parseLFSMessage(msg, { originalCodepage: "J" });
+```
+
+Valid values are:
+
+| Value | Code page                  |
+| ----- | -------------------------- |
+| `L`   | Latin-1 (CP1252)           |
+| `G`   | Greek (CP1253)             |
+| `C`   | Cyrillic (CP1251)          |
+| `E`   | Central Europe (CP1250)    |
+| `T`   | Turkish (CP1254)           |
+| `B`   | Baltic (CP1257)            |
+| `J`   | Japanese (Shift-JIS)       |
+| `H`   | Traditional Chinese (Big5) |
+| `S`   | Simplified Chinese (GBK)   |
+| `K`   | Korean (EUC-KR)            |

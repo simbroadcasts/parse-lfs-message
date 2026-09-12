@@ -40,7 +40,7 @@ describe("special characters", () => {
     expect(parseLFSMessage("^5")).toEqual("^5");
     expect(parseLFSMessage("^6")).toEqual("^6");
     expect(parseLFSMessage("^7")).toEqual("^7");
-    expect(parseLFSMessage("^8")).toEqual("^8");
+    expect(parseLFSMessage("^8")).toEqual("^9");
     expect(parseLFSMessage("^9")).toEqual("^9");
 
     expect(parseLFSMessage("^^0")).toEqual("^^0");
@@ -96,5 +96,45 @@ describe("special characters", () => {
       0,
     ]);
     expect(parseLFSMessage(bytes)).toEqual('abc ěšč|*:\\/?"<>#^^');
+  });
+
+  describe("default codepage with ^8", () => {
+    it("should convert Latin 1 (CP1252) after ^8 control character by default and output ^9 instead", () => {
+      expect(
+        parseLFSMessage(
+          new Uint8Array([
+            94, // ^
+            74, // J
+            177,
+            178,
+            94, // ^
+            56, // 8
+            253, // ý
+            254, // þ
+          ]),
+        ),
+      ).toEqual("ｱｲ^9ýþ");
+    });
+
+    it("should convert to the provided `defaultCodepage` after ^8 control character and output ^9 instead", () => {
+      expect(
+        parseLFSMessage(
+          new Uint8Array([
+            94, // ^
+            74, // J
+            177,
+            178,
+            94, // ^
+            56, // 8
+            236, // ě
+            154, // š
+            232, // č
+          ]),
+          {
+            originalCodepage: "E",
+          },
+        ),
+      ).toEqual("ｱｲ^9ěšč");
+    });
   });
 });

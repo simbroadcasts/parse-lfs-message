@@ -154,16 +154,4 @@ describe("CP1252", () => {
       ),
     ).toEqual(Object.values(characters).join(""));
   });
-
-  it("should convert Latin 1 (CP1252) using ^8 control character", () => {
-    expect(
-      parseLFSMessage(
-        new Uint8Array([
-          94, // ^
-          76, // L
-          ...Object.keys(characters).map((key) => Number(key)),
-        ]),
-      ),
-    ).toEqual(Object.values(characters).join(""));
-  });
 });
